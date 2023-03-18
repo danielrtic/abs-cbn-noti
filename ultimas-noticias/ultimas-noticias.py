@@ -4,6 +4,9 @@ from bs4 import BeautifulSoup
 import deepl
 import smtplib
 from email.message import EmailMessage
+proxies = {"http": "http://dredon:xD7w0cPQ@45.147.60.243:29842",
+           "https": "http://dredon:xD7w0cPQ@45.147.60.243:29842"}
+
 
 encabezados = {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
@@ -11,7 +14,7 @@ encabezados = {
 
 url = "https://news.abs-cbn.com/entertainment"
 
-respuesta = requests.get(url, headers = encabezados)
+respuesta = requests.get(url, headers = encabezados, proxies = proxies)
 
 soup = BeautifulSoup(respuesta.text, 'html.parser')
 
