@@ -1,3 +1,4 @@
+# La funcion de este script es el envio de las ultimas noticias de abs-cbn news traducidas al español.
 import requests
 from bs4 import BeautifulSoup
 import deepl
