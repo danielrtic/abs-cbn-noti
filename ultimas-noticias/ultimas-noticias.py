@@ -4,8 +4,26 @@ from bs4 import BeautifulSoup
 import deepl
 import smtplib
 from email.message import EmailMessage
-proxies = {"http": "http://dredon:xD7w0cPQ@45.147.60.243:29842",
-           "https": "http://dredon:xD7w0cPQ@45.147.60.243:29842"}
+import json
+
+# definir proxy 
+
+apiproxy = requests.get("https://api.myprivateproxy.net/v1/fetchProxies/json/full/cu47s8oxdjivgf14to3ey2vywlk2o4u9")
+todos = json.loads(apiproxy.text)
+
+
+servidor = json.dumps(todos[0]['proxy_ip'])
+puerto = json.dumps(todos[0]['proxy_port'])
+usuario = json.dumps(todos[0]['username'])
+contraseña = json.dumps(todos[0]['password'])
+
+servidor = servidor.replace('"','')
+puerto = puerto.replace('"','')
+usuario = usuario.replace('"','')
+contraseña = contraseña.replace('"','')
+
+proxies = {"http": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto,
+           "https": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto}
 
 
 encabezados = {
