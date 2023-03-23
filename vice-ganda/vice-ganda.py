@@ -1,7 +1,7 @@
 # La funcion de este script es el envio de las ultimas noticias de vice-ganda de abs-cbn news traducidas al español.
 import requests
 from bs4 import BeautifulSoup
-import deepl
+from deep_translator import GoogleTranslator
 import smtplib
 from email.message import EmailMessage
 import json
@@ -48,13 +48,10 @@ for vice in lista_de_vice:
 # la cuota de deepl se va agotar, hay que buscar implementacion con googletrans o alguna alternativa
 
 
-"""
-# Traducir con deepl
-translator = deepl.Translator('1fed4bf3-24eb-d961-cb9a-09414bedeb3a:fx') 
-noticias_traducida = translator.translate_text(noticias, target_lang='es') 
-enviar_email = print(noticias_traducida)
-print(noticias_traducida)
-"""
+# traducir con deep_translator
+
+noticias_traducida = GoogleTranslator(source='auto', target='es').translate(vice_ganda)
+noticias_traducida = noticias_traducida.replace("ALETA", "FIN")
 
 # envio de email con las noticias.
 
