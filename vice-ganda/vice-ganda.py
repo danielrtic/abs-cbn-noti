@@ -65,7 +65,7 @@ mensaje['Subject'] = email_subject
 mensaje['From'] = sender_email_address 
 mensaje['To'] = receiver_email_address
 
-mensaje.set_content(f"Ultimas noticias de vice ganda (sin traducir): \"{vice_ganda}\"", subtype="plain")
+mensaje.set_content(f"Ultimas noticias de vice ganda (sin traducir): \"{noticias_traducida}\"", subtype="plain")
 
 email_smtp = "smtp.ionos.es"  
 server = smtplib.SMTP(email_smtp, '587')
