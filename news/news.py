@@ -7,17 +7,20 @@ from email.message import EmailMessage
 import json
 import pandas as pd
 from tabulate import tabulate
+import random as rd
 
 # definir proxy 
+
+n = rd.randint(0, 1)
 
 apiproxy = requests.get("https://api.myprivateproxy.net/v1/fetchProxies/json/full/cu47s8oxdjivgf14to3ey2vywlk2o4u9")
 todos = json.loads(apiproxy.text)
 
 
-servidor = json.dumps(todos[0]['proxy_ip'])
-puerto = json.dumps(todos[0]['proxy_port'])
-usuario = json.dumps(todos[0]['username'])
-contraseña = json.dumps(todos[0]['password'])
+servidor = json.dumps(todos[n]['proxy_ip'])
+puerto = json.dumps(todos[n]['proxy_port'])
+usuario = json.dumps(todos[n]['username'])
+contraseña = json.dumps(todos[n]['password'])
 
 servidor = servidor.replace('"','')
 puerto = puerto.replace('"','')
