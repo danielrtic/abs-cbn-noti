@@ -33,7 +33,7 @@ API_DEEPL = os.getenv("API_DEEPL")
 
 n = rd.randint(0, 1)
 
-apiproxy = requests.get("https://api.myprivateproxy.net/v1/fetchProxies/json/full/cu47s8oxdjivgf14to3ey2vywlk2o4u9")
+apiproxy = requests.get(proxy)
 todos = json.loads(apiproxy.text)
 
 
