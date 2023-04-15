@@ -5,7 +5,6 @@ from deep_translator import GoogleTranslator
 import smtplib
 from email.message import EmailMessage
 import json
-import re
 import random as rd
 
 # definir proxy 

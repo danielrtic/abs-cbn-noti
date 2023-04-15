@@ -5,7 +5,6 @@ import deepl
 import smtplib
 from email.message import EmailMessage
 import json
-import re
 import random as rd
 
 # definir proxy 
