@@ -1,4 +1,4 @@
-# La funcion de este script es el envio de las ultimas noticias de entretenimiento de abs-cbn news traducidas al español.
+# The function of this script is to send the latest entertainment news from abs-cbn news translated into spanish.
 import requests
 from bs4 import BeautifulSoup
 import deepl
@@ -6,12 +6,34 @@ import smtplib
 from email.message import EmailMessage
 import json
 import random as rd
+from dotenv import load_dotenv
+import os
 
-# definir proxy 
+# Define variables api configuration file config.env
+
+root_file = os.getcwd()
+config_file = os.path.join(root_file, 'config.env')
+
+load_dotenv(config_file)
+
+proxy = os.getenv("proxy")
+
+# email config variables
+
+origin = os.getenv("origin")
+destination = os.getenv("destination")
+password = os.getenv("password")
+smtp = os.getenv("smtp")
+
+# api key deepl
+
+API_DEEPL = os.getenv("API_DEEPL")
+
+# define proxy 
 
 n = rd.randint(0, 1)
 
-apiproxy = requests.get("https://api.myprivateproxy.net/v1/fetchProxies/json/full/cu47s8oxdjivgf14to3ey2vywlk2o4u9")
+apiproxy = requests.get(proxy)
 todos = json.loads(apiproxy.text)
 
 
@@ -50,7 +72,7 @@ for noticia in lista_de_noticias:
     # .replace(" ", "").replace("\r", "")
 
 # Traducir con deepl
-translator = deepl.Translator('1fed4bf3-24eb-d961-cb9a-09414bedeb3a:fx') 
+translator = deepl.Translator(API_DEEPL) 
 noticias_traducida = translator.translate_text(noticias, target_lang='es') 
 enviar_email = print(noticias_traducida)
 print(noticias_traducida)
@@ -59,8 +81,8 @@ print(noticias_traducida)
 mensaje = EmailMessage()
 
 email_subject = "Las noticias de entretenimiento de abs-news" 
-sender_email_address = "info@info.informaticaremota.es" 
-receiver_email_address = "daniel@informaticaremota.es" 
+sender_email_address = origin 
+receiver_email_address = destination 
 
 mensaje['Subject'] = email_subject 
 mensaje['From'] = sender_email_address 
@@ -68,7 +90,7 @@ mensaje['To'] = receiver_email_address
 
 mensaje.set_content(f"Ultimas noticias: \"{noticias_traducida}\"", subtype="plain")
 
-email_smtp = "smtp.ionos.es"  
+email_smtp = smtp  
 server = smtplib.SMTP(email_smtp, '587')
 
 # Identify this client to the SMTP server 
@@ -77,8 +99,8 @@ server.ehlo()
 # Secure the SMTP connection 
 server.starttls()
 
-sender_email_address = "info@info.informaticaremota.es" 
-email_password = "KJ46xb-LRQ45ca5" 
+sender_email_address = origin 
+email_password = password
 
 # Login to email account 
 server.login(sender_email_address, email_password) 
