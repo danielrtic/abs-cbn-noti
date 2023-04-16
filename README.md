@@ -6,8 +6,13 @@ Web scraping with python to extract titles and links from the news website and s
 
 All extractions will go through deepl translation or deep_translator python module.
 
+## Origin of this project
 
-# Implementation
+This project was created to learn how to use python to extract data from a website and send it by email.
+
+Also because I like to know every day the news from the Philippines and that they reach me by email.
+
+## Implementation
 
 It has to be placed in the cront tab like this
 
@@ -23,9 +28,12 @@ Example of job definition:
 |  |  |  |  |
 *  *  *  *  * user-name  path to script .py
 ```
-```
 And then restart the service.
 
-``service cron restart``.
+``service cron restart``
 
+## Future updates:
 
+- Improve how to extract and pass everything to deep_translator and abandon deepl (due to the limitations of the free api).
+
+- Implement other scripts for other sections of abs-cbn news web site
