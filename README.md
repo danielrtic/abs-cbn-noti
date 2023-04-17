@@ -14,9 +14,33 @@ Also because I like to know every day the news from the Philippines and that the
 
 ## Implementation
 
+### Python modules required:
+
+You will need to run pip to install the following python modules
+
+```
+pip install requests
+pip install bs4
+pip install python-decouple
+pip install deep_translator
+pip install lxml
+pip install deepl
+```
+### To configure the project:
+
+You must open from the root folder of the project the ".env" file.
+
+open to configure the json api of your proxy provider, user and password of the smtp email server you have and the corresponding mails (from and where you want to be notified).
+
+Some scripts still work with the deepl api, you will need it, it is free and the per character limit itself fits in without problems.
+
+Although in a future update this will be removed and the deep_translator module will be used with google translator to remove script execution limits.
+
 It has to be placed in the cront tab like this
 
-``nano /etc/crontab``
+### make the script run with crontab
+
+``sudo nano /etc/crontab``
 
 ```
 Example of job definition:
