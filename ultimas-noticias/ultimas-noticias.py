@@ -43,22 +43,15 @@ respuesta = requests.get(url, headers = encabezados, proxies = proxies)
 
 soup = BeautifulSoup(respuesta.text, 'html.parser')
 
-#contenedor_de_noticias = soup.find(id="questions")
-
 lista_de_noticias = soup.find_all("div", id="latest-news")
 
 for noticia in lista_de_noticias:
     noticia_titulo = noticia.find('ul').text
-#    pregunta_descripcion = pregunta.find('div', class_="s-post-summary--content-excerpt")
-#    pregunta_descripcion = pregunta_descripcion.text.replace("\n", "").replace("\r", "").strip()
 
-# Traducir con deepl
+# Translate with deepl
 translator = deepl.Translator(API_DEEPL) 
 titulo_traducido = translator.translate_text(noticia_titulo, target_lang='es') 
 enviar_email = print(titulo_traducido)
-print(titulo_traducido)
-#print(pregunta_descripcion)
-print(enviar_email)
 
 # sending of email with the news.
 
