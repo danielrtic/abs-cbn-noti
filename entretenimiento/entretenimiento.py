@@ -6,28 +6,10 @@ import smtplib
 from email.message import EmailMessage
 import json
 import random as rd
-from dotenv import load_dotenv
-import os
-
-# Define variables api configuration file config.env
-
-root_file = os.getcwd()
-config_file = os.path.join(root_file, 'config.env')
-
-load_dotenv(config_file)
-
-proxy = os.getenv("proxy")
-
-# email config variables
-
-origin = os.getenv("origin")
-destination = os.getenv("destination")
-password = os.getenv("password")
-smtp = os.getenv("smtp")
-
-# api key deepl
-
-API_DEEPL = os.getenv("API_DEEPL")
+# Define variables api configuration file .env in root project
+import sys
+sys.path.append("..")
+from cfg import *
 
 # define proxy 
 
