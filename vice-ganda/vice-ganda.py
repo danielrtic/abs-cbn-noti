@@ -1,4 +1,4 @@
-# La funcion de este script es el envio de las ultimas noticias de vice-ganda de abs-cbn news traducidas al español.
+# The function of this script is to send the latest vice-ganda news from abs-cbn news translated into spanish.
 import requests
 from bs4 import BeautifulSoup
 from deep_translator import GoogleTranslator
@@ -11,7 +11,7 @@ import sys
 sys.path.append("..")
 from cfg import *
 
-# definir proxy 
+# define proxy 
 
 n = rd.randint(0, 1)
 
@@ -47,19 +47,16 @@ lista_de_vice = soup.find_all("section", class_="section-more-stories")
 
 for vice in lista_de_vice:
     vice_ganda = vice.find('p').text
-#    pregunta_descripcion = pregunta.find('div', class_="s-post-summary--content-excerpt")
     vice_ganda = vice.text.replace("Read more »", "FIN").replace("12345", "").replace(">","").replace("Last","").replace("ABS-CBN News","").rstrip()
-    # .replace(" ", "").replace("\r", "")
-
-# la cuota de deepl se va agotar, hay que buscar implementacion con googletrans o alguna alternativa
 
 
-# traducir con deep_translator
+
+# translate with deep_translator
 
 noticias_traducida = GoogleTranslator(source='auto', target='es').translate(vice_ganda)
 noticias_traducida = noticias_traducida.replace("ALETA", "FIN")
 
-# envio de email con las noticias.
+# sending of email with the news.
 
 mensaje = EmailMessage()
 

@@ -1,4 +1,5 @@
-# La funcion de este script es el envio de lasnoticias de abs-cbn news traducidas al español.
+# The function of this script is to send the abs-cbn news translated into spanish.
+# The script is still to be finished
 import requests
 from bs4 import BeautifulSoup
 from  deep_translator import GoogleTranslator
@@ -9,7 +10,7 @@ import pandas as pd
 from tabulate import tabulate
 import random as rd
 
-# definir proxy 
+# define proxy
 
 n = rd.randint(0, 1)
 
@@ -44,12 +45,10 @@ respuesta2 = requests.get(url2, headers = encabezados, proxies = proxies)
 soup = BeautifulSoup(respuesta.text, 'html.parser')
 soup2 = BeautifulSoup(respuesta2.text, 'html.parser')
 
-#contenedor_de_noticias = soup.find(id="questions")
-
 lista_de_noticias = soup.find_all("div", class_="col-9 content")
 lista_de_noticias2 = soup2.find_all("section", class_="section-more-stories")
 
-# crear lista de noticias
+# create news list
 
 new_list = []
 new2_list = []

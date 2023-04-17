@@ -49,16 +49,14 @@ lista_de_noticias = soup.find_all("section", class_="section-more-stories")
 
 for noticia in lista_de_noticias:
     noticias = noticia.find('p').text
-#    pregunta_descripcion = pregunta.find('div', class_="s-post-summary--content-excerpt")
     noticias = noticia.text.replace("Read more »", "FIN").replace("12345", "").replace(">","").replace("Last","").replace("ABS-CBN News","").rstrip()
-    # .replace(" ", "").replace("\r", "")
 
-# Traducir con deepl
+# Translate with deepl
 translator = deepl.Translator(API_DEEPL) 
 noticias_traducida = translator.translate_text(noticias, target_lang='es') 
 enviar_email = print(noticias_traducida)
-print(noticias_traducida)
-# envio de email con las noticias.
+
+# sending of email with the news.
 
 mensaje = EmailMessage()
 
