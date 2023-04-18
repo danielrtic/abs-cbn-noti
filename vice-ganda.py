@@ -7,8 +7,6 @@ from email.message import EmailMessage
 import json
 import random as rd
 # Define variables api configuration file .env in root project
-import sys
-sys.path.append("..")
 from cfg import *
 
 # define proxy 
