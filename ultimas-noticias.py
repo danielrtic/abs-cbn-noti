@@ -1,4 +1,4 @@
-# The function of this script is to send the latest entertainment news from abs-cbn news translated into spanish.
+# The function of this script is to send the latest news from abs-cbn news translated into spanish.
 import requests
 from bs4 import BeautifulSoup
 import deepl
@@ -7,11 +7,9 @@ from email.message import EmailMessage
 import json
 import random as rd
 # Define variables api configuration file .env in root project
-import sys
-sys.path.append("..")
 from cfg import *
 
-# define proxy 
+# define proxy
 
 n = rd.randint(0, 1)
 
@@ -33,8 +31,6 @@ proxies = {"http": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto,
            "https": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto}
 
 
-
-
 encabezados = {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
 }
@@ -45,22 +41,21 @@ respuesta = requests.get(url, headers = encabezados, proxies = proxies)
 
 soup = BeautifulSoup(respuesta.text, 'html.parser')
 
-lista_de_noticias = soup.find_all("section", class_="section-more-stories")
+lista_de_noticias = soup.find_all("div", id="latest-news")
 
 for noticia in lista_de_noticias:
-    noticias = noticia.find('p').text
-    noticias = noticia.text.replace("Read more »", "FIN").replace("12345", "").replace(">","").replace("Last","").replace("ABS-CBN News","").rstrip()
+    noticia_titulo = noticia.find('ul').text
 
 # Translate with deepl
 translator = deepl.Translator(API_DEEPL) 
-noticias_traducida = translator.translate_text(noticias, target_lang='es') 
-enviar_email = print(noticias_traducida)
+titulo_traducido = translator.translate_text(noticia_titulo, target_lang='es') 
+enviar_email = print(titulo_traducido)
 
 # sending of email with the news.
 
 mensaje = EmailMessage()
 
-email_subject = "Las noticias de entretenimiento de abs-news" 
+email_subject = "Ultimas noticias abs-cnb" 
 sender_email_address = origin 
 receiver_email_address = destination 
 
@@ -68,7 +63,7 @@ mensaje['Subject'] = email_subject
 mensaje['From'] = sender_email_address 
 mensaje['To'] = receiver_email_address
 
-mensaje.set_content(f"Ultimas noticias: \"{noticias_traducida}\"", subtype="plain")
+mensaje.set_content(f"Ultimas noticias de abs-cnb news: \"{titulo_traducido}\"", subtype="plain")
 
 email_smtp = smtp  
 server = smtplib.SMTP(email_smtp, '587')
@@ -79,8 +74,8 @@ server.ehlo()
 # Secure the SMTP connection 
 server.starttls()
 
-sender_email_address = origin 
-email_password = password
+sender_email_address = origin
+email_password = password 
 
 # Login to email account 
 server.login(sender_email_address, email_password) 
