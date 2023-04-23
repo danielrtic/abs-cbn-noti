@@ -1,13 +1,14 @@
 # The function of this script is to send the latest news from abs-cbn news translated into spanish.
 import requests
 from bs4 import BeautifulSoup
-import deepl
+from deep_translator import GoogleTranslator
 import smtplib
 from email.message import EmailMessage
 import json
 import random as rd
 # Define variables api configuration file .env in root project
 from cfg import *
+import os
 
 # define proxy
 
@@ -43,14 +44,29 @@ soup = BeautifulSoup(respuesta.text, 'html.parser')
 
 lista_de_noticias = soup.find_all("div", id="latest-news")
 
+
 for noticia in lista_de_noticias:
-    noticia_titulo = noticia.find('ul').text
+    noticia_titulo = noticia.find_next('ul').text
+    noticia_titulo = noticia.text.split('\n\n')
 
-# Translate with deepl
-translator = deepl.Translator(API_DEEPL) 
-titulo_traducido = translator.translate_text(noticia_titulo, target_lang='es') 
-enviar_email = print(titulo_traducido)
+noticias_tradu = []
 
+for prueba in noticia_titulo:
+    #translate with google and add it to the translated in noticias traducidas
+    noticias_traducida = GoogleTranslator(source='auto', target='es').translate(prueba)
+    #noticias_traducida = noticias_traducida.replace("ALETA", "FIN")
+    noticias_tradu.append(noticias_traducida)
+
+
+# Convert the "noticias_tradu" list into something more pleasant to read.
+
+open("temp.txt", "x")
+with open('temp.txt', 'w') as archivo:
+    for elemento in noticias_tradu:
+        archivo.write(elemento + '\n')
+f = open("temp.txt", "r")
+news = f.read()
+f.close()
 # sending of email with the news.
 
 mensaje = EmailMessage()
@@ -63,7 +79,7 @@ mensaje['Subject'] = email_subject
 mensaje['From'] = sender_email_address 
 mensaje['To'] = receiver_email_address
 
-mensaje.set_content(f"Ultimas noticias de abs-cnb news: \"{titulo_traducido}\"", subtype="plain")
+mensaje.set_content(f"Ultimas noticias de abs-cnb news: \"{news}\"", subtype="plain")
 
 email_smtp = smtp  
 server = smtplib.SMTP(email_smtp, '587')
@@ -85,3 +101,5 @@ server.send_message(mensaje)
 
 # Close connection to server 
 server.quit()
+# remove the temp file
+os.remove("temp.txt")

@@ -8,6 +8,7 @@ import json
 import random as rd
 # Define variables api configuration file .env in root project
 from cfg import *
+import os
 
 # define proxy 
 
@@ -45,14 +46,25 @@ lista_de_vice = soup.find_all("section", class_="section-more-stories")
 
 for vice in lista_de_vice:
     vice_ganda = vice.find('p').text
-    vice_ganda = vice.text.replace("Read more »", "FIN").replace("12345", "").replace(">","").replace("Last","").replace("ABS-CBN News","").rstrip()
+    vice_ganda = vice.text.replace("Read more »", "FIN").replace("Last","").replace("ABS-CBN News","").rstrip().replace("''", "").replace("\xa0", "").replace("\t", "").replace("\r", "").split('\n\n')
+    
+noticias_tradu = []
 
+for prueba in vice_ganda:
+    #translate with google and add it to the translated in noticias traducidas
+    noticias_traducida = GoogleTranslator(source='auto', target='es').translate(prueba)
+    noticias_traducida = noticias_traducida.replace("12345", "").replace(">","").replace("Último","").replace("ALETA","FIN")
+    noticias_tradu.append(noticias_traducida)
+# Convert the "noticias_tradu" list into something more pleasant to read.
 
-
-# translate with deep_translator
-
-noticias_traducida = GoogleTranslator(source='auto', target='es').translate(vice_ganda)
-noticias_traducida = noticias_traducida.replace("ALETA", "FIN")
+open("temp.txt", "x")
+with open('temp.txt', 'w') as archivo:
+    for elemento in noticias_tradu:
+        archivo.write(elemento + '\n')
+f = open("temp.txt", "r")
+news = f.read()
+f.close()
+print(news)
 
 # sending of email with the news.
 
@@ -66,7 +78,7 @@ mensaje['Subject'] = email_subject
 mensaje['From'] = sender_email_address 
 mensaje['To'] = receiver_email_address
 
-mensaje.set_content(f"Ultimas noticias de vice ganda (sin traducir): \"{noticias_traducida}\"", subtype="plain")
+mensaje.set_content(f"Ultimas noticias de vice ganda (traducido): \"{news}\"", subtype="plain")
 
 email_smtp = smtp  
 server = smtplib.SMTP(email_smtp, '587')
@@ -88,3 +100,5 @@ server.send_message(mensaje)
 
 # Close connection to server 
 server.quit()
+# remove the temp file
+os.remove("temp.txt")
