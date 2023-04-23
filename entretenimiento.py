@@ -1,13 +1,15 @@
 # The function of this script is to send the latest entertainment news from abs-cbn news translated into spanish.
 import requests
 from bs4 import BeautifulSoup
-import deepl
+#import deepl
 import smtplib
 from email.message import EmailMessage
 import json
 import random as rd
+from deep_translator import GoogleTranslator
 # Define variables api configuration file .env in root project
 from cfg import *
+import os
 
 # define proxy 
 
@@ -45,17 +47,32 @@ soup = BeautifulSoup(respuesta.text, 'html.parser')
 
 lista_de_noticias = soup.find_all("section", class_="section-more-stories")
 
-for noticia in lista_de_noticias:
-    noticias = noticia.find('p').text
-    noticias = noticia.text.replace("Read more »", "FIN").replace("12345", "").replace(">","").replace("Last","").replace("ABS-CBN News","").rstrip()
 
-# Translate with deepl
-translator = deepl.Translator(API_DEEPL) 
-noticias_traducida = translator.translate_text(noticias, target_lang='es') 
-enviar_email = print(noticias_traducida)
+for noticia in lista_de_noticias:
+    noticias = noticia.find_next('p').text
+    noticias = noticia.text.replace("Read more »", "FIN").replace("12345", "").replace(">","").replace("Last","").replace("ABS-CBN News","").rstrip().replace("''", "").replace("\xa0", "").replace("\t", "").replace("\r", "").split('\n\n')
+
+noticias_tradu = []
+
+for prueba in noticias:
+    #translate with google and add it to the translated in noticias traducidas
+    noticias_traducida = GoogleTranslator(source='auto', target='es').translate(prueba)
+    noticias_traducida = noticias_traducida.replace("ALETA", "FIN")
+    noticias_tradu.append(noticias_traducida)
+
+# Convert the "noticias_tradu" list into something more pleasant to read.
+
+open("temp.txt", "x")
+with open('temp.txt', 'w') as archivo:
+    for elemento in noticias_tradu:
+        archivo.write(elemento + '\n')
+f = open("temp.txt", "r")
+news = f.read()
+f.close()
+
+
 
 # sending of email with the news.
-
 mensaje = EmailMessage()
 
 email_subject = "Las noticias de entretenimiento de abs-news" 
@@ -66,7 +83,7 @@ mensaje['Subject'] = email_subject
 mensaje['From'] = sender_email_address 
 mensaje['To'] = receiver_email_address
 
-mensaje.set_content(f"Ultimas noticias: \"{noticias_traducida}\"", subtype="plain")
+mensaje.set_content(f"Ultimas noticias: \"{news}\"", subtype="plain")
 
 email_smtp = smtp  
 server = smtplib.SMTP(email_smtp, '587')
@@ -88,3 +105,5 @@ server.send_message(mensaje)
 
 # Close connection to server 
 server.quit()
+# remove the temp file
+os.remove("temp.txt")
