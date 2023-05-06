@@ -28,7 +28,7 @@ puerto = puerto.replace('"','')
 usuario = usuario.replace('"','')
 contraseña = contraseña.replace('"','')
 
-proxies = {"http": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto,
+proxies_list = {"http": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto,
            "https": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto}
 
 
@@ -41,8 +41,8 @@ encabezados = {
 url = "https://news.abs-cbn.com/news"
 url2 = "https://news.abs-cbn.com/news?page=2"
 
-response = requests.get(url, headers = encabezados, proxies = proxies)
-response2 = requests.get(url2, headers = encabezados, proxies = proxies)
+response = requests.get(url, headers = encabezados, proxies = proxies_list)
+response2 = requests.get(url2, headers = encabezados, proxies = proxies_list)
 
 soup = BeautifulSoup(response.text, 'html.parser')
 soup2 = BeautifulSoup(response2.text, 'html.parser')
@@ -69,7 +69,7 @@ noticias_tradu2 = []
 
 for prueba in noticias:
     #translate with google and add it to the translated in noticias_tradu
-    noticias_traducida = GoogleTranslator(source='auto', target='es').translate(prueba)
+    noticias_traducida = GoogleTranslator(source='auto', target='es', proxies=proxies_list).translate(prueba)
     noticias_traducida = noticias_traducida.replace("Leer más ", "").replace("12345\n>\nÚltimo", "").replace("MÁS HISTORIAS", "").replace("ABS-CBN Noticias", "").replace("Noticias ABS-CBN", "")
     noticias_tradu.append(noticias_traducida)
 

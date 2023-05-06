@@ -24,7 +24,6 @@ pip install bs4
 pip install python-decouple
 pip install deep_translator
 pip install lxml
-pip install deepl
 ```
 ### To configure the project:
 
