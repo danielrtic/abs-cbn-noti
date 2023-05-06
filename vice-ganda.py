@@ -28,7 +28,7 @@ puerto = puerto.replace('"','')
 usuario = usuario.replace('"','')
 contraseña = contraseña.replace('"','')
 
-proxies = {"http": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto,
+proxies_list = {"http": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto,
            "https": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto}
 
 
@@ -38,7 +38,7 @@ encabezados = {
 
 url = "https://news.abs-cbn.com/list/tag/vice-ganda"
 
-respuesta = requests.get(url, headers = encabezados, proxies = proxies)
+respuesta = requests.get(url, headers = encabezados, proxies = proxies_list)
 
 soup = BeautifulSoup(respuesta.text, 'html.parser')
 
@@ -52,7 +52,7 @@ noticias_tradu = []
 
 for prueba in vice_ganda:
     #translate with google and add it to the translated in noticias traducidas
-    noticias_traducida = GoogleTranslator(source='auto', target='es').translate(prueba)
+    noticias_traducida = GoogleTranslator(source='auto', target='es', proxies=proxies_list).translate(prueba)
     noticias_traducida = noticias_traducida.replace("12345", "").replace(">","").replace("Último","").replace("ALETA","FIN")
     noticias_tradu.append(noticias_traducida)
 # Convert the "noticias_tradu" list into something more pleasant to read.
