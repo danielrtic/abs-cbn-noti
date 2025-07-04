@@ -8,3 +8,6 @@ smtp = config('smtp')
 password = config('password')
 proxy = config('proxy')
 API_DEEPL = config('API_DEEPL')
+
+# Control whether to use proxy or not
+USE_PROXY = config('USE_PROXY', default=True, cast=bool)

@@ -11,26 +11,28 @@ from deep_translator import GoogleTranslator
 from cfg import *
 import os
 
-# define proxy 
+# define proxy conditionally
 
-n = rd.randint(0, 1)
+if USE_PROXY:
+    n = rd.randint(0, 1)
 
-apiproxy = requests.get(proxy)
-todos = json.loads(apiproxy.text)
+    apiproxy = requests.get(proxy)
+    todos = json.loads(apiproxy.text)
 
+    servidor = json.dumps(todos[n]['proxy_ip'])
+    puerto = json.dumps(todos[n]['proxy_port'])
+    usuario = json.dumps(todos[n]['username'])
+    contraseña = json.dumps(todos[n]['password'])
 
-servidor = json.dumps(todos[n]['proxy_ip'])
-puerto = json.dumps(todos[n]['proxy_port'])
-usuario = json.dumps(todos[n]['username'])
-contraseña = json.dumps(todos[n]['password'])
+    servidor = servidor.replace('"','')
+    puerto = puerto.replace('"','')
+    usuario = usuario.replace('"','')
+    contraseña = contraseña.replace('"','')
 
-servidor = servidor.replace('"','')
-puerto = puerto.replace('"','')
-usuario = usuario.replace('"','')
-contraseña = contraseña.replace('"','')
-
-proxies_list = {"http": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto,
-           "https": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto}
+    proxies_list = {"http": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto,
+               "https": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto}
+else:
+    proxies_list = None
 
 
 
@@ -56,7 +58,10 @@ noticias_tradu = []
 
 for prueba in noticias:
     #translate with google and add it to the translated in noticias traducidas
-    noticias_traducida = GoogleTranslator(source='auto', target='es', proxies=proxies_list).translate(prueba)
+    if USE_PROXY:
+        noticias_traducida = GoogleTranslator(source='auto', target='es', proxies=proxies_list).translate(prueba)
+    else:
+        noticias_traducida = GoogleTranslator(source='auto', target='es').translate(prueba)
     noticias_traducida = noticias_traducida.replace("ALETA", "FIN")
     noticias_tradu.append(noticias_traducida)
 

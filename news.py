@@ -10,26 +10,28 @@ import os
 from cfg import *
 import random as rd
 
-# define proxy
+# define proxy conditionally
 
-n = rd.randint(0, 1)
+if USE_PROXY:
+    n = rd.randint(0, 1)
 
-apiproxy = requests.get(proxy)
-todos = json.loads(apiproxy.text)
+    apiproxy = requests.get(proxy)
+    todos = json.loads(apiproxy.text)
 
+    servidor = json.dumps(todos[n]['proxy_ip'])
+    puerto = json.dumps(todos[n]['proxy_port'])
+    usuario = json.dumps(todos[n]['username'])
+    contraseña = json.dumps(todos[n]['password'])
 
-servidor = json.dumps(todos[n]['proxy_ip'])
-puerto = json.dumps(todos[n]['proxy_port'])
-usuario = json.dumps(todos[n]['username'])
-contraseña = json.dumps(todos[n]['password'])
+    servidor = servidor.replace('"','')
+    puerto = puerto.replace('"','')
+    usuario = usuario.replace('"','')
+    contraseña = contraseña.replace('"','')
 
-servidor = servidor.replace('"','')
-puerto = puerto.replace('"','')
-usuario = usuario.replace('"','')
-contraseña = contraseña.replace('"','')
-
-proxies_list = {"http": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto,
-           "https": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto}
+    proxies_list = {"http": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto,
+               "https": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto}
+else:
+    proxies_list = None
 
 
 
@@ -69,13 +71,19 @@ noticias_tradu2 = []
 
 for prueba in noticias:
     #translate with google and add it to the translated in noticias_tradu
-    noticias_traducida = GoogleTranslator(source='auto', target='es', proxies=proxies_list).translate(prueba)
+    if USE_PROXY:
+        noticias_traducida = GoogleTranslator(source='auto', target='es', proxies=proxies_list).translate(prueba)
+    else:
+        noticias_traducida = GoogleTranslator(source='auto', target='es').translate(prueba)
     noticias_traducida = noticias_traducida.replace("Leer más ", "").replace("12345\n>\nÚltimo", "").replace("MÁS HISTORIAS", "").replace("ABS-CBN Noticias", "").replace("Noticias ABS-CBN", "")
     noticias_tradu.append(noticias_traducida)
 
 for prueba2 in noticias2:
     #translate with google and add it to the translated in noticias_tradu2
-    noticias_traducida2 = GoogleTranslator(source='auto', target='es').translate(prueba2)
+    if USE_PROXY:
+        noticias_traducida2 = GoogleTranslator(source='auto', target='es', proxies=proxies_list).translate(prueba2)
+    else:
+        noticias_traducida2 = GoogleTranslator(source='auto', target='es').translate(prueba2)
     noticias_traducida2 = noticias_traducida2.replace("Leer más ", "").replace("12345\n>\nÚltimo", "").replace("Primero\n<\n", "").replace("MÁS HISTORIAS", "").replace("»", "").replace("ABS-CBN Noticias", "").replace("Noticias ABS-CBN", "")
     noticias_tradu2.append(noticias_traducida2)
 
