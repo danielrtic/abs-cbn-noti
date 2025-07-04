@@ -12,24 +12,27 @@ import os
 
 # define proxy 
 
-n = rd.randint(0, 1)
+if USE_PROXY:
+    n = rd.randint(0, 1)
 
-apiproxy = requests.get(proxy)
-todos = json.loads(apiproxy.text)
+    apiproxy = requests.get(proxy)
+    todos = json.loads(apiproxy.text)
 
 
-servidor = json.dumps(todos[n]['proxy_ip'])
-puerto = json.dumps(todos[n]['proxy_port'])
-usuario = json.dumps(todos[n]['username'])
-contraseña = json.dumps(todos[n]['password'])
+    servidor = json.dumps(todos[n]['proxy_ip'])
+    puerto = json.dumps(todos[n]['proxy_port'])
+    usuario = json.dumps(todos[n]['username'])
+    contraseña = json.dumps(todos[n]['password'])
 
-servidor = servidor.replace('"','')
-puerto = puerto.replace('"','')
-usuario = usuario.replace('"','')
-contraseña = contraseña.replace('"','')
+    servidor = servidor.replace('"','')
+    puerto = puerto.replace('"','')
+    usuario = usuario.replace('"','')
+    contraseña = contraseña.replace('"','')
 
-proxies_list = {"http": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto,
-           "https": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto}
+    proxies_list = {"http": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto,
+               "https": "http://"+usuario+":"+contraseña+"@"+servidor+":"+puerto}
+else:
+    proxies_list = None
 
 
 encabezados = {
@@ -38,7 +41,7 @@ encabezados = {
 
 url = "https://news.abs-cbn.com/list/tag/vice-ganda"
 
-respuesta = requests.get(url, headers = encabezados, proxies = proxies_list)
+respuesta = requests.get(url, headers = encabezados, proxies = proxies_list if USE_PROXY else None)
 
 soup = BeautifulSoup(respuesta.text, 'html.parser')
 
@@ -52,7 +55,10 @@ noticias_tradu = []
 
 for prueba in vice_ganda:
     #translate with google and add it to the translated in noticias traducidas
-    noticias_traducida = GoogleTranslator(source='auto', target='es', proxies=proxies_list).translate(prueba)
+    if USE_PROXY:
+        noticias_traducida = GoogleTranslator(source='auto', target='es', proxies=proxies_list).translate(prueba)
+    else:
+        noticias_traducida = GoogleTranslator(source='auto', target='es').translate(prueba)
     noticias_traducida = noticias_traducida.replace("12345", "").replace(">","").replace("Último","").replace("ALETA","FIN")
     noticias_tradu.append(noticias_traducida)
 # Convert the "noticias_tradu" list into something more pleasant to read.
